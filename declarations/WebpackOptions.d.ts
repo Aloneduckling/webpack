@@ -560,7 +560,11 @@ export type SourceMapFilename = string;
  */
 export type SourcePrefix = string;
 /**
- * Handles exceptions in module loading correctly at a performance cost.
+ * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+ */
+export type StrictModuleErrorHandling = boolean;
+/**
+ * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
  */
 export type StrictModuleExceptionHandling = boolean;
 /**
@@ -623,6 +627,51 @@ export type StatsValue =
 	  )
 	| boolean
 	| StatsOptions;
+/**
+ * Filtering modules.
+ */
+export type ModuleFilterTypes = ModuleFilterItemTypes[] | ModuleFilterItemTypes;
+/**
+ * Filtering value, regexp or function.
+ */
+export type ModuleFilterItemTypes =
+	| RegExp
+	| string
+	| ((
+			name: string,
+			module: import("../lib/stats/DefaultStatsFactoryPlugin").StatsModule,
+			type: "module" | "chunk" | "root-of-chunk" | "nested"
+	  ) => boolean);
+/**
+ * Filtering modules.
+ */
+export type AssetFilterTypes = AssetFilterItemTypes[] | AssetFilterItemTypes;
+/**
+ * Filtering value, regexp or function.
+ */
+export type AssetFilterItemTypes =
+	| RegExp
+	| string
+	| ((
+			name: string,
+			asset: import("../lib/stats/DefaultStatsFactoryPlugin").StatsAsset
+	  ) => boolean);
+/**
+ * Filtering warnings.
+ */
+export type WarningFilterTypes =
+	| WarningFilterItemTypes[]
+	| WarningFilterItemTypes;
+/**
+ * Filtering value, regexp or function.
+ */
+export type WarningFilterItemTypes =
+	| RegExp
+	| string
+	| ((
+			warning: import("../lib/stats/DefaultStatsFactoryPlugin").StatsError,
+			value: string
+	  ) => boolean);
 /**
  * Environment to build for. An array of environments to build for all of them when possible.
  */
@@ -1982,7 +2031,11 @@ export interface Output {
 	 */
 	sourcePrefix?: SourcePrefix;
 	/**
-	 * Handles exceptions in module loading correctly at a performance cost.
+	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+	 */
+	strictModuleErrorHandling?: StrictModuleErrorHandling;
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
@@ -2292,15 +2345,15 @@ export interface StatsOptions {
 	/**
 	 * Please use excludeModules instead.
 	 */
-	exclude?: boolean | FilterTypes;
+	exclude?: boolean | ModuleFilterTypes;
 	/**
 	 * Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.
 	 */
-	excludeAssets?: FilterTypes;
+	excludeAssets?: AssetFilterTypes;
 	/**
 	 * Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.
 	 */
-	excludeModules?: boolean | FilterTypes;
+	excludeModules?: boolean | ModuleFilterTypes;
 	/**
 	 * Group assets by how their are related to chunks.
 	 */
@@ -2460,7 +2513,7 @@ export interface StatsOptions {
 	/**
 	 * Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.
 	 */
-	warningsFilter?: FilterTypes;
+	warningsFilter?: WarningFilterTypes;
 }
 /**
  * Options for the watcher.
@@ -2531,6 +2584,10 @@ export interface AssetParserOptions {
  * Generator options for asset/resource modules.
  */
 export interface AssetResourceGeneratorOptions {
+	/**
+	 * Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.
+	 */
+	emit?: boolean;
 	/**
 	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
@@ -2915,7 +2972,11 @@ export interface OutputNormalized {
 	 */
 	sourcePrefix?: SourcePrefix;
 	/**
-	 * Handles exceptions in module loading correctly at a performance cost.
+	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+	 */
+	strictModuleErrorHandling?: StrictModuleErrorHandling;
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**

@@ -244,6 +244,73 @@ module.exports = (env, { testPath }) => [
 		]
 	},
 	{
+		externals: {
+			library: `promise require(${JSON.stringify(
+				path.resolve(
+					testPath,
+					"../0-create-library/commonjs2-runtimeChunk/main.js"
+				)
+			)})`
+		},
+		output: {
+			library: { type: "commonjs-module" }
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs2-runtimeChunk")
+			})
+		]
+	},
+	{
+		externals: {
+			library: `promise require(${JSON.stringify(
+				path.resolve(
+					testPath,
+					"../0-create-library/commonjs2-iife-runtimeChunk/main.js"
+				)
+			)})`
+		},
+		output: {
+			library: { type: "commonjs-module" }
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs2-iife-runtimeChunk")
+			})
+		]
+	},
+	{
+		externals: {
+			library: `var (require(${JSON.stringify(
+				"../0-create-library/global-runtimeChunk/runtime.js"
+			)}), require(${JSON.stringify(
+				"../0-create-library/global-runtimeChunk/main.js"
+			)}), globalName.x.y)`
+		},
+		target: "web",
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("global-runtimeChunk")
+			})
+		]
+	},
+	{
+		externals: {
+			library: `var (require(${JSON.stringify(
+				"../0-create-library/global-iife-runtimeChunk/runtime.js"
+			)}), require(${JSON.stringify(
+				"../0-create-library/global-iife-runtimeChunk/main.js"
+			)}), globalName.x.y)`
+		},
+		target: "web",
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("global-iife-runtimeChunk")
+			})
+		]
+	},
+
+	{
 		resolve: {
 			alias: {
 				library: path.resolve(testPath, "../0-create-library/entryA.js")

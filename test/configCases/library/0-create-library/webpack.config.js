@@ -231,6 +231,70 @@ module.exports = (env, { testPath }) => [
 		}
 	},
 	{
+		output: {
+			filename: "commonjs2-runtimeChunk/[name].js",
+			libraryTarget: "commonjs2",
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
+			filename: "commonjs2-iife-runtimeChunk/[name].js",
+			libraryTarget: "commonjs2",
+			iife: true
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
+			filename: "global-runtimeChunk/[name].js",
+			library: ["globalName", "x", "y"],
+			libraryTarget: "global",
+			iife: false
+		},
+		target: "web",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
+			filename: "global-iife-runtimeChunk/[name].js",
+			library: ["globalName", "x", "y"],
+			libraryTarget: "global",
+			iife: true
+		},
+		target: "web",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
 		entry: {
 			entryA: {
 				import: "./index"
